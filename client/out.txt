@@ -1,0 +1,183 @@
+File: C:\Ecom\client\src\components\admin\FormCategory.jsx:1
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import useEcomStore from '../../store/ecom-store'
+---
+File: C:\Ecom\client\src\components\admin\FormCategory.jsx:12
+
+  useEffect(() => { getCategory() }, [getCategory])
+
+  const submit = async (e) => {
+---
+File: C:\Ecom\client\src\components\admin\FormEditProduct.jsx:1
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'react-toastify'
+---
+File: C:\Ecom\client\src\components\admin\FormEditProduct.jsx:11
+ const {id}=useParams(); const navigate=useNavigate(); const token=useEcomStore((s)=>s.token); const [categories,setCategories]=useState([]); const [form,setForm]=useState(null)
+ useEffect(()=>{Promise.all([listCategory(),readProduct(token,id)]).then(([c,p])=>{setCategories(c.data||[]);setForm({...p.data,categoryId:String(p.data.categoryId||'')})}).catch(()=>toast.error('Load product failed'))},[id,token])
+ if(!form)return <div>Loading...</div>
+ const submit=async(e)=>{e.preventDefault();try{await updateProduct(token,id,{...form,categoryId:form.categoryId});toast.success('Product updated');navigate('/admin/product')}catch(err){toast.error(err.response?.data?.message||'Update failed')}}
+---
+File: C:\Ecom\client\src\components\admin\FormProduct.jsx:1
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { toast } from 'react-toastify'
+---
+File: C:\Ecom\client\src\components\admin\FormProduct.jsx:15
+ const load=()=>Promise.all([listCategory(),listProduct(100)]).then(([c,p])=>{setCategories(c.data||[]);setProducts(p.data||[])}).catch(()=>{})
+ useEffect(load,[])
+ const submit=async(e)=>{e.preventDefault();try{await createProduct(token,form);toast.success('Product created');setForm(empty);load()}catch(err){toast.error(err.response?.data?.message||'Create failed')}}
+ const remove=async(id)=>{if(!confirm('Delete this product?'))return;try{await deleteProduct(token,id);toast.success('Deleted');load()}catch(err){toast.error(err.response?.data?.message||'Delete failed')}}
+---
+File: C:\Ecom\client\src\components\admin\TableOrders.jsx:1
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import useEcomStore from '../../store/ecom-store'
+---
+File: C:\Ecom\client\src\components\admin\TableOrders.jsx:14
+  }
+  useEffect(() => { if (token) load() }, [token])
+  const update = async (orderId, orderStatus) => { await changeOrderStatus(token, orderId, orderStatus); load() }
+
+---
+File: C:\Ecom\client\src\components\admin\TableUsers.jsx:1
+import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
+import useEcomStore from '../../store/ecom-store'
+---
+File: C:\Ecom\client\src\components\admin\TableUsers.jsx:14
+  }
+  useEffect(() => { if (token) load() }, [token])
+
+  const setRole = async (id, role) => { await changeUserRole(token, { id, role }); load() }
+---
+File: C:\Ecom\client\src\components\card\HistoryCard.jsx:1
+import { useEffect, useState } from 'react'
+import useEcomStore from '../../store/ecom-store'
+import { getOrders } from '../../api/user'
+---
+File: C:\Ecom\client\src\components\card\HistoryCard.jsx:10
+  const [orders,setOrders] = useState([])
+  useEffect(()=>{ if(token) getOrders(token).then(r=>setOrders(r.data.orders || [])).catch(()=>setOrders([])) },[token])
+  return <div className="space-y-4">{orders.map((o)=><article key={o.id} className="border rounded-xl bg-white p-5"><div className="flex justify-between"><div><b>Order #{o.id}</b><p className="text-sm text-gray-500">{dateFormat(o.createdAt)}</p></div><b>฿{numberFormat(o.cartTotal)}</b></div><div className="mt-3 text-sm">{o.products?.map(p=><div key={p.id}>{p.product?.title} × {p.count}</div>)}</div></article>)}</div>
+}
+---
+File: C:\Ecom\client\src\components\card\SearchCard.jsx:1
+import { useEffect, useState } from 'react'
+import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css'
+---
+File: C:\Ecom\client\src\components\card\SearchCard.jsx:16
+
+  useEffect(() => { getCategory().catch(() => {}) }, [])
+  useEffect(() => {
+    const timer = setTimeout(() => text.trim() ? search({ query: text.trim() }) : getProduct(), 350)
+---
+File: C:\Ecom\client\src\components\card\SearchCard.jsx:17
+  useEffect(() => { getCategory().catch(() => {}) }, [])
+  useEffect(() => {
+    const timer = setTimeout(() => text.trim() ? search({ query: text.trim() }) : getProduct(), 350)
+    return () => clearTimeout(timer)
+---
+File: C:\Ecom\client\src\components\card\SummaryCard.jsx:1
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+---
+File: C:\Ecom\client\src\components\card\SummaryCard.jsx:14
+
+  useEffect(()=>{ if(token) listUserCart(token).then(r=>setCart(r.data)).catch(()=>{}) },[token])
+  const next = async () => {
+    if(!address.trim()) return toast.info('Please enter address')
+---
+File: C:\Ecom\client\src\components\home\BestSeller.jsx:1
+import { useEffect, useState } from 'react'
+import { SwiperSlide } from 'swiper/react'
+import { listProductBy } from '../../api/product'
+---
+File: C:\Ecom\client\src\components\home\BestSeller.jsx:9
+  const [items,setItems] = useState([])
+  useEffect(()=>{ listProductBy('sold','desc',10).then(r=>setItems(r.data)).catch(()=>setItems([])) },[])
+  return <SwiperShowProduct>{items.map((item)=><SwiperSlide key={item.id}><ProductCard item={item}/></SwiperSlide>)}</SwiperShowProduct>
+}
+---
+File: C:\Ecom\client\src\components\home\NewProduct.jsx:1
+import { useEffect, useState } from 'react'
+import { SwiperSlide } from 'swiper/react'
+import { listProductBy } from '../../api/product'
+---
+File: C:\Ecom\client\src\components\home\NewProduct.jsx:9
+  const [items,setItems] = useState([])
+  useEffect(()=>{ listProductBy('createdAt','desc',10).then(r=>setItems(r.data)).catch(()=>setItems([])) },[])
+  return <SwiperShowProduct>{items.map((item)=><SwiperSlide key={item.id}><ProductCard item={item}/></SwiperSlide>)}</SwiperShowProduct>
+}
+---
+File: C:\Ecom\client\src\pages\admin\Dashboard.jsx:1
+import { useEffect, useState } from 'react'
+import { getListAllUsers, getOrdersAdmin } from '../../api/admin'
+import { listProduct } from '../../api/product'
+---
+File: C:\Ecom\client\src\pages\admin\Dashboard.jsx:10
+  const [stats, setStats] = useState({ users: 0, products: 0, orders: 0, sales: 0 })
+  useEffect(() => {
+    Promise.all([getListAllUsers(token), listProduct(100), getOrdersAdmin(token)]).then(([u,p,o]) => {
+      const orders = o.data || []
+---
+File: C:\Ecom\client\src\pages\Shop.jsx:1
+import { useEffect } from 'react'
+import ProductCard from '../components/card/ProductCard'
+import SearchCard from '../components/card/SearchCard'
+---
+File: C:\Ecom\client\src\pages\Shop.jsx:9
+  const getProduct = useEcomStore((s) => s.getProduct)
+  useEffect(() => { getProduct().catch(() => {}) }, [])
+
+  return (
+---
+File: C:\Ecom\client\src\pages\user\Payment.jsx:3
+import { loadStripe } from '@stripe/stripe-js'
+import { useEffect, useMemo, useState } from 'react'
+import { payment } from '../../api/stripe'
+import CheckoutForm from '../../components/CheckoutForm'
+---
+File: C:\Ecom\client\src\pages\user\Payment.jsx:15
+
+  useEffect(() => {
+    if (!stripeKey) return
+    payment(token)
+---
+File: C:\Ecom\client\src\routes\LoadingToRedirect.jsx:1
+import { useEffect, useState } from 'react'
+import { Navigate } from 'react-router-dom'
+
+---
+File: C:\Ecom\client\src\routes\LoadingToRedirect.jsx:6
+  const [count,setCount]=useState(3)
+  useEffect(()=>{ const timer=setInterval(()=>setCount((v)=>v-1),1000); return()=>clearInterval(timer) },[])
+  if(count<=0) return <Navigate to="/login" replace />
+  return <div className="min-h-[60vh] flex items-center justify-center text-lg">Please login. Redirecting in {count}...</div>
+---
+File: C:\Ecom\client\src\routes\ProtectRouteAdmin.jsx:1
+import { useEffect, useState } from 'react'
+import useEcomStore from '../store/ecom-store'
+import { currentAdmin } from '../api/auth'
+---
+File: C:\Ecom\client\src\routes\ProtectRouteAdmin.jsx:10
+
+  useEffect(() => {
+    if (!token) return setAllowed(false)
+    currentAdmin(token)
+---
+File: C:\Ecom\client\src\routes\ProtectRouteUser.jsx:1
+import { useEffect, useState } from 'react'
+import useEcomStore from '../store/ecom-store'
+import { currentUser } from '../api/auth'
+---
+File: C:\Ecom\client\src\routes\ProtectRouteUser.jsx:10
+
+  useEffect(() => {
+    if (!token) return setAllowed(false)
+    currentUser(token)
+---
