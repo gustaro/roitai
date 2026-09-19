@@ -1,19 +1,18 @@
 import axios from "axios";
 
-// http://localhost:5001/api/admin/orders
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
 
 export const getOrdersAdmin = async (token) => {
-  // code body
-  return axios.get("http://localhost:5001/api/admin/orders", {
+  return axios.get(`${API_URL}/admin/orders`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
+
 export const changeOrderStatus = async (token, orderId, orderStatus) => {
-  // code body
   return axios.put(
-    "http://localhost:5001/api/admin/order-status",
+    `${API_URL}/admin/order-status`,
     {
       orderId,
       orderStatus,
@@ -26,28 +25,24 @@ export const changeOrderStatus = async (token, orderId, orderStatus) => {
   );
 };
 
-
 export const getListAllUsers = async (token) => {
-  // code body
-  return axios.get("http://localhost:5001/api/users", {
+  return axios.get(`${API_URL}/users`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
 
-export const changeUserStatus = async (token,value) => {
-  // code body
-  return axios.post("http://localhost:5001/api/change-status",value, {
+export const changeUserStatus = async (token, value) => {
+  return axios.post(`${API_URL}/change-status`, value, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
 
-export const changeUserRole = async (token,value) => {
-  // code body
-  return axios.post("http://localhost:5001/api/change-role",value, {
+export const changeUserRole = async (token, value) => {
+  return axios.post(`${API_URL}/change-role`, value, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -55,7 +50,7 @@ export const changeUserRole = async (token,value) => {
 };
 
 export const currentUser = async (token) => {
-  return axios.post("http://localhost:5001/api/current-user", {}, {
+  return axios.post(`${API_URL}/current-user`, {}, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -63,7 +58,7 @@ export const currentUser = async (token) => {
 };
 
 export const currentAdmin = async (token) => {
-  return axios.post("http://localhost:5001/api/current-admin", {}, {
+  return axios.post(`${API_URL}/current-admin`, {}, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

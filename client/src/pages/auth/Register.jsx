@@ -49,7 +49,7 @@ const Register = () => {
     // console.log("ok ลูกพี่");
     // Send to Back
     try {
-      const res = await axios.post("http://localhost:5001/api/register", data);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:5001/api'}/register`, data);
 
       console.log(res.data);
       toast.success(res.data);

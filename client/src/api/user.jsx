@@ -1,8 +1,9 @@
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+
 export const createUserCart = async (token, cart) => {
-  // code body
-  return axios.post("http://localhost:5001/api/user/cart", cart, {
+  return axios.post(`${API_URL}/user/cart`, cart, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -10,8 +11,7 @@ export const createUserCart = async (token, cart) => {
 };
 
 export const listUserCart = async (token) => {
-  // code body
-  return axios.get("http://localhost:5001/api/user/cart", {
+  return axios.get(`${API_URL}/user/cart`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -19,9 +19,8 @@ export const listUserCart = async (token) => {
 };
 
 export const saveAddress = async (token, address) => {
-  // code body
   return axios.post(
-    "http://localhost:5001/api/user/address",
+    `${API_URL}/user/address`,
     { address },
     {
       headers: {
@@ -32,8 +31,7 @@ export const saveAddress = async (token, address) => {
 };
 
 export const saveOrder = async (token, payload) => {
-  // code body
-  return axios.post("http://localhost:5001/api/user/order", payload, {
+  return axios.post(`${API_URL}/user/order`, payload, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -41,8 +39,7 @@ export const saveOrder = async (token, payload) => {
 };
 
 export const getOrders = async (token) => {
-  // code body
-  return axios.get("http://localhost:5001/api/user/order", {
+  return axios.get(`${API_URL}/user/order`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

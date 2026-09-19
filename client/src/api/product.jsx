@@ -1,8 +1,9 @@
 import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001/api";
+
 export const createProduct = async (token, form) => {
-  // code body
-  return axios.post("http://localhost:5001/api/product", form, {
+  return axios.post(`${API_URL}/product`, form, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -10,29 +11,27 @@ export const createProduct = async (token, form) => {
 };
 
 export const listProduct = async (count = 20) => {
-  // code body
-  return axios.get("http://localhost:5001/api/products/" + count);
+  return axios.get(`${API_URL}/products/${count}`);
 };
 
 export const readProduct = async (token, id) => {
-  // code body
-  return axios.get("http://localhost:5001/api/product/" + id, {
+  return axios.get(`${API_URL}/product/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
+
 export const deleteProduct = async (token, id) => {
-  // code body
-  return axios.delete("http://localhost:5001/api/product/" + id, {
+  return axios.delete(`${API_URL}/product/${id}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
+
 export const updateProduct = async (token, id, form) => {
-  // code body
-  return axios.put("http://localhost:5001/api/product/" + id, form, {
+  return axios.put(`${API_URL}/product/${id}`, form, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -40,10 +39,8 @@ export const updateProduct = async (token, id, form) => {
 };
 
 export const uploadFiles = async (token, form) => {
-  // code
-  // console.log('form api frontent', form)
   return axios.post(
-    "http://localhost:5001/api/images",
+    `${API_URL}/images`,
     {
       image: form,
     },
@@ -56,10 +53,8 @@ export const uploadFiles = async (token, form) => {
 };
 
 export const removeFiles = async (token, public_id) => {
-  // code
-  // console.log('form api frontent', form)
   return axios.post(
-    "http://localhost:5001/api/removeimages",
+    `${API_URL}/removeimages`,
     {
       public_id,
     },
@@ -72,13 +67,11 @@ export const removeFiles = async (token, public_id) => {
 };
 
 export const searchFilters = async (arg) => {
-  // code body
-  return axios.post("http://localhost:5001/api/search/filters", arg);
+  return axios.post(`${API_URL}/search/filters`, arg);
 };
 
 export const listProductBy = async (sort, order, limit) => {
-  // code body
-  return axios.post("http://localhost:5001/api/productby", {
+  return axios.post(`${API_URL}/productby`, {
     sort,
     order,
     limit,

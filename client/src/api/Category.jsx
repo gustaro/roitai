@@ -1,9 +1,9 @@
 import axios from 'axios'
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
 
 export const createCategory = async (token, form) => {
-    // code body
-    return axios.post('http://localhost:5001/api/category', form, {
+    return axios.post(`${API_URL}/category`, form, {
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -11,13 +11,11 @@ export const createCategory = async (token, form) => {
 }
 
 export const listCategory = async () => {
-    // code body
-    return axios.get('http://localhost:5001/api/category')
+    return axios.get(`${API_URL}/category`)
 }
 
 export const removeCategory = async (token, id) => {
-    // code body
-    return axios.delete('http://localhost:5001/api/category/'+id, {
+    return axios.delete(`${API_URL}/category/${id}`, {
         headers: {
             Authorization: `Bearer ${token}`
         }
