@@ -62,15 +62,17 @@ exports.userCart = async (req, res) => {
     });
     // console.log(user)
 
-    // Check quantity
+    // Check quantity in batch
+    const productIds = cart.map((item) => item.id);
+    const dbProducts = await prisma.product.findMany({
+      where: { id: { in: productIds } },
+      select: { id: true, quantity: true, title: true },
+    });
+
+    const productMap = new Map(dbProducts.map((p) => [p.id, p]));
+
     for (const item of cart) {
-      // console.log(item)
-      const product = await prisma.product.findUnique({
-        where: { id: item.id },
-        select: { quantity: true, title: true },
-      });
-      // console.log(item)
-      // console.log(product)
+      const product = productMap.get(item.id);
       if (!product || item.count > product.quantity) {
         return res.status(400).json({
           ok: false,
@@ -78,6 +80,7 @@ exports.userCart = async (req, res) => {
         });
       }
     }
+
 
     // Deleted old Cart item
     await prisma.productOnCart.deleteMany({
@@ -220,46 +223,43 @@ exports.saveOrder = async (req, res) => {
     }
 
     const amountTHB = Number(amount) / 100;
-    // Create a new Order
-    const order = await prisma.order.create({
-      data: {
-        products: {
-          create: userCart.products.map((item) => ({
-            productId: item.productId,
-            count: item.count,
-            price: item.price,
-          })),
+
+    const updateOperations = userCart.products.map((item) =>
+      prisma.product.update({
+        where: { id: item.productId },
+        data: {
+          quantity: { decrement: item.count },
+          sold: { increment: item.count },
         },
-        orderedBy: {
-          connect: { id: req.user.id },
+      })
+    );
+
+    const [order] = await prisma.$transaction([
+      prisma.order.create({
+        data: {
+          products: {
+            create: userCart.products.map((item) => ({
+              productId: item.productId,
+              count: item.count,
+              price: item.price,
+            })),
+          },
+          orderedBy: {
+            connect: { id: req.user.id },
+          },
+          cartTotal: userCart.cartTotal,
+          stripePaymentId: id,
+          amount: amountTHB,
+          status: status,
+          currentcy: currency,
         },
-        cartTotal: userCart.cartTotal,
-        stripePaymentId: id,
-        amount: amountTHB,
-        status: status,
-        currentcy: currency,
-      },
-    });
-    // stripePaymentId String
-    // amount          Int
-    // status          String
-    // currentcy       String
+      }),
+      ...updateOperations,
+      prisma.cart.deleteMany({
+        where: { orderedById: Number(req.user.id) },
+      }),
+    ]);
 
-    // Update Product
-    const update = userCart.products.map((item) => ({
-      where: { id: item.productId },
-      data: {
-        quantity: { decrement: item.count },
-        sold: { increment: item.count },
-      },
-    }));
-    console.log(update);
-
-    await Promise.all(update.map((updated) => prisma.product.update(updated)));
-
-    await prisma.cart.deleteMany({
-      where: { orderedById: Number(req.user.id) },
-    });
     res.json({ ok: true, order });
   } catch (err) {
     console.log(err);
